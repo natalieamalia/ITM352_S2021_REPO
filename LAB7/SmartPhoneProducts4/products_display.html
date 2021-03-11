@@ -37,19 +37,45 @@
         </p> 
         <input id='speedSlider' type='range' min=".1" max="5" step=".1" style="direction: rtl;" onchange="localStyle.innerHTML = '.rotate img {animation-duration: ' + speedSlider.value + 's;}';">
     <div>
-        <main> 
+        <main>
             <section class="item"
             onmouseover="
-            spins_span.innerHTML = ++spins;
-            this.className = 'item rotate';
-            hit_spin_span.innerHTML = (hits/spins).toFixed(2);
-            win_span.innerHTML = ( (hits/spins >= 0.5) && (hits < spins) );
-            over_half ||= ( (hits/spins >= 0.5) && (hits < spins) );
+            if(!this.className.includes('rotate')) 
+            {
+                spins_span.innerHTML = ++spins;
+                this.className = 'item rotate';
+            }
+            // -- Winning progress depends on hits/spins
+            hits_spins_ratio = hits/spins;
+            if ( hits_spins_ratio > 0 && hits_spins_ratio < 0.25) {
+                progress = 'On your way!';
+            }
+            else if ( hits_spins_ratio >= 0.25 && hits_spins_ration < 0.5) {
+                    progress = 'Almost there!';
+            }
+            else if ( hits_spins_ratio >= 0.5 ) {
+                        progress = 'You win!';
+                    }
+            else {
+                progress = 'Get going!' ;
+            }
+            hit_spin_span.innerHTML = (hits_spins_ratio).toFixed(2);
+            over_half = over_half || 
+            ( (hits_spins_ratio >= 0.5) && (hits < spins) );
+            win_span.innerHTML = progress;
             "
             onclick="
-            hits_span.innerHTML = ++hits;
-            this.className = 'item';
-            win_span.innerHTML = ( (hits/spins >= 0.5) && (hits < spins) );"
+            if(this.className.includes('rotate')) 
+            {
+                hits_span.innerHTML = ++hits;
+                this.className = 'item';   
+            } else {
+                this.className = 'item rotate'
+            }
+            hit_spin_span.innerHTML = (hits_spins_ratio).toFixed(2);
+            over_half ||= ( (hits_spins_ratio >= 0.5) && (hits < spins) );
+            win_span.innerHTML = over_half;
+            "
             >
             <h2>HTC</h2>
             <p>&dollar; 40.00</p>
@@ -58,15 +84,41 @@
 
             <section class="item"
             onmouseover="
-            spins_span.innerHTML = ++spins;
-            this.className = 'item rotate';
-            hit_spin_span.innerHTML = (hits/spins).toFixed(2);
-            win_span.innerHTML = ( (hits/spins >= 0.5) && (hits < spins) );
+            if(!this.className.includes('rotate')) 
+            {
+                spins_span.innerHTML = ++spins;
+                this.className = 'item rotate';
+            }
+            // -- Winning progress depends on hits/spins
+            hits_spins_ratio = hits/spins;
+            if ( hits_spins_ratio > 0 && hits_spins_ratio < 0.25) {
+                progress = 'On your way!';
+            }
+            else if ( hits_spins_ratio >= 0.25 && hits_spins_ration < 0.5) {
+                    progress = 'Almost there!';
+            }
+            else if ( hits_spins_ratio >= 0.5 ) {
+                        progress = 'You win!';
+                    }
+            else {
+                progress = 'Get going!' ;
+            }
+            hit_spin_span.innerHTML = (hits_spins_ratio).toFixed(2);
+            over_half = over_half || 
+            ( (hits_spins_ratio >= 0.5) && (hits < spins) );
+            win_span.innerHTML = progress;
             "
             onclick="
-            hits_span.innerHTML = ++hits;
-            this.className = 'item';
-            win_span.innerHTML = ( (hits/spins >= 0.5) && (hits < spins) );
+            if(this.className.includes('rotate')) 
+            {
+                hits_span.innerHTML = ++hits;
+                this.className = 'item';   
+            } else {
+                this.className = 'item rotate'
+            }
+            hit_spin_span.innerHTML = (hits_spins_ratio).toFixed(2);
+            over_half ||= ( (hits_spins_ratio >= 0.5) && (hits < spins) );
+            win_span.innerHTML = over_half;
             "
             >
             <h2>Apple</h2>
@@ -76,15 +128,42 @@
 
             <section class="item"
             onmouseover="
-            spins_span.innerHTML = ++spins;
-            this.className = 'item rotate';
-            hit_spin_span.innerHTML = (hits/spins).toFixed(2);
-            win_span.innerHTML = ( (hits/spins >= 0.5) && (hits < spins) );
+            if(!this.className.includes('rotate')) 
+            {
+                spins_span.innerHTML = ++spins;
+                this.className = 'item rotate';
+            }
+            // -- Winning progress depends on hits/spins
+            hits_spins_ratio = hits/spins;
+            if ( hits_spins_ratio > 0 && hits_spins_ratio < 0.25) {
+                progress = 'On your way!';
+            }
+            else if ( hits_spins_ratio >= 0.25 && hits_spins_ration < 0.5) {
+                    progress = 'Almost there!';
+            }
+            else if ( hits_spins_ratio >= 0.5 ) {
+                        progress = 'You win!';
+                    }
+            else {
+                progress = 'Get going!' ;
+            }
+            hit_spin_span.innerHTML = (hits_spins_ratio).toFixed(2);
+            over_half = over_half || 
+            ( (hits_spins_ratio >= 0.5) && (hits < spins) );
+            win_span.innerHTML = progress;
             "
             onclick="
-            hits_span.innerHTML = ++hits;
-            this.className = 'item';
-            win_span.innerHTML = ( (hits/spins >= 0.5) && (hits < spins) );"
+            if(this.className.includes('rotate')) 
+            {
+                hits_span.innerHTML = ++hits;
+                this.className = 'item';   
+            } else {
+                this.className = 'item rotate'
+            }
+            hit_spin_span.innerHTML = (hits_spins_ratio).toFixed(2);
+            over_half ||= ( (hits_spins_ratio >= 0.5) && (hits < spins) );
+            win_span.innerHTML = over_half;
+            "
             >
             <h2>Nokia</h2>
             <p>&dollar; 35.00</p>
@@ -93,15 +172,42 @@
 
             <section class="item"
             onmouseover="
-            spins_span.innerHTML = ++spins;
-            this.className = 'item rotate';
-            hit_spin_span.innerHTML = (hits/spins).toFixed(2);
-            win_span.innerHTML = ( (hits/spins >= 0.5) && (hits < spins) );
+            if(!this.className.includes('rotate')) 
+            {
+                spins_span.innerHTML = ++spins;
+                this.className = 'item rotate';
+            }
+            // -- Winning progress depends on hits/spins
+            hits_spins_ratio = hits/spins;
+            if ( hits_spins_ratio > 0 && hits_spins_ratio < 0.25) {
+                progress = 'On your way!';
+            }
+            else if ( hits_spins_ratio >= 0.25 && hits_spins_ration < 0.5) {
+                    progress = 'Almost there!';
+            }
+            else if ( hits_spins_ratio >= 0.5 ) {
+                        progress = 'You win!';
+                    }
+            else {
+                progress = 'Get going!' ;
+            }
+            hit_spin_span.innerHTML = (hits_spins_ratio).toFixed(2);
+            over_half = over_half || 
+            ( (hits_spins_ratio >= 0.5) && (hits < spins) );
+            win_span.innerHTML = progress;
             "
             onclick="
-            hits_span.innerHTML = ++hits;
-            this.className = 'item';
-            win_span.innerHTML = ( (hits/spins >= 0.5) && (hits < spins) );"
+            if(this.className.includes('rotate')) 
+            {
+                hits_span.innerHTML = ++hits;
+                this.className = 'item';   
+            } else {
+                this.className = 'item rotate'
+            }
+            hit_spin_span.innerHTML = (hits_spins_ratio).toFixed(2);
+            over_half ||= ( (hits_spins_ratio >= 0.5) && (hits < spins) );
+            win_span.innerHTML = over_half;
+            "
             >
             <h2>Samsung</h2>
             <p>&dollar; 45.00</p>
@@ -110,15 +216,42 @@
 
             <section class="item"
             onmouseover="
-            spins_span.innerHTML = ++spins;
-            this.className = 'item rotate';
-            hit_spin_span.innerHTML = (hits/spins).toFixed(2);
-            win_span.innerHTML = ( (hits/spins >= 0.5) && (hits < spins) );
+            if(!this.className.includes('rotate')) 
+            {
+                spins_span.innerHTML = ++spins;
+                this.className = 'item rotate';
+            }
+            // -- Winning progress depends on hits/spins
+            hits_spins_ratio = hits/spins;
+            if ( hits_spins_ratio > 0 && hits_spins_ratio < 0.25) {
+                progress = 'On your way!';
+            }
+            else if ( hits_spins_ratio >= 0.25 && hits_spins_ration < 0.5) {
+                    progress = 'Almost there!';
+            }
+            else if ( hits_spins_ratio >= 0.5 ) {
+                        progress = 'You win!';
+                    }
+            else {
+                progress = 'Get going!' ;
+            }
+            hit_spin_span.innerHTML = (hits_spins_ratio).toFixed(2);
+            over_half = over_half || 
+            ( (hits_spins_ratio >= 0.5) && (hits < spins) );
+            win_span.innerHTML = progress;
             "
             onclick="
-            hits_span.innerHTML = ++hits;
-            this.className = 'item';
-            win_span.innerHTML = ( (hits/spins >= 0.5) && (hits < spins) );"
+            if(this.className.includes('rotate')) 
+            {
+                hits_span.innerHTML = ++hits;
+                this.className = 'item';   
+            } else {
+                this.className = 'item rotate'
+            }
+            hit_spin_span.innerHTML = (hits_spins_ratio).toFixed(2);
+            over_half ||= ( (hits_spins_ratio >= 0.5) && (hits < spins) );
+            win_span.innerHTML = over_half;
+            "
             >
             <h2>Blackberry</h2>
             <p>&dollar; 10.00</p>

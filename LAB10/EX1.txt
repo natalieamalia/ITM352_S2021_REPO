@@ -1,0 +1,10 @@
+repeat {
+    move forward
+    if stuck then {
+        turn right
+    }
+    move forward
+    if stuck then {
+        turn left
+    }
+}
