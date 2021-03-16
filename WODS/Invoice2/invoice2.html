@@ -49,6 +49,17 @@
     //Computes subtotal of products
     var subtotal = extended_price1 + extended_price2 + extended_price3 + extended_price4 + extended_price5;
 
+    //Computes shipping cost of products
+    if(subtotal <=50) {
+        shipping = 2;
+    }
+    else if(subtotal <=100) {
+        shipping = 5;
+    }
+    else {
+        shipping = 0.05*subtotal //if shipping is greater than $100 it will cost 5% of subtotal
+    }
+
     //Computes tax
     var tax_rate = 0.0575;
     var tax = tax_rate*subtotal;
@@ -80,7 +91,7 @@
             <td width="43%">${product1.item}</td>
             <td align="center" width="11%">${product1.quantity}</td>
             <td width="13%">${product1.price}</td>
-            <td width="54%">${extended_price1}</td>
+            <td width="54%">${extended_price1.toFixed(2)}</td>
           </tr>`);
 
           //Product Row 2
@@ -88,7 +99,7 @@
             <td width="43%">${product2.item}</td>
             <td align="center" width="11%">${product2.quantity}</td>
             <td width="13%">${product2.price}</td>
-            <td width="54%">${extended_price2}</td>
+            <td width="54%">${extended_price2.toFixed(2)}</td>
           </tr>`);
 
           //Product Row 3
@@ -96,7 +107,7 @@
             <td width="43%">${product3.item}</td>
             <td align="center" width="11%">${product3.quantity}</td>
             <td width="13%">${product3.price}</td>
-            <td width="54%">${extended_price3}</td>
+            <td width="54%">${extended_price3.toFixed(2)}</td>
           </tr>`);
 
           //Product Row 4
@@ -104,7 +115,7 @@
             <td width="43%">${product4.item}</td>
             <td align="center" width="11%">${product4.quantity}</td>
             <td width="13%">${product4.price}</td>
-            <td width="54%">${extended_price4}</td>
+            <td width="54%">${extended_price4.toFixed(2)}</td>
           </tr>`);
 
           //Product Row 5
@@ -112,7 +123,7 @@
             <td width="43%">${product5.item}</td>
             <td align="center" width="11%">${product5.quantity}</td>
             <td width="13%">${product5.price}</td>
-            <td width="54%">${extended_price5}</td>
+            <td width="54%">${extended_price5.toFixed(2)}</td>
           </tr>`);
         </script>
           <tr>
@@ -123,8 +134,12 @@
             <td width="54%">$<script>document.write(subtotal.toFixed(2));</script></td>
           </tr>
           <tr>
-            <td style="text-align: center;" colspan="3" width="67%"><span style="font-family: arial;">Tax @ 5.75%</span></td>
+            <td style="text-align: center;" colspan="3" width="67%"><span style="font-family: arial;">Tax @ <script>document.write(100*tax_rate.toFixed(2));</script>%</span></td>
             <td width="54%">$<script>document.write(tax.toFixed(2));</script></td>
+          </tr>
+          <tr>
+            <td style="text-align: center;" colspan="3" width="67%">Shipping</td>
+            <td width="54%">$<script>document.write(shipping.toFixed(2));</script></td>
           </tr>
           <tr>
             <td style="text-align: center;" colspan="3" width="67%"><strong>Total</strong></td>
@@ -132,5 +147,11 @@
           </tr>
         </tbody>
       </table>
+      <b><span style="font-weight: bold;">
+        OUR SHIPPING POLICY:
+        </span><br>
+        A subtotal $0 - $49.99 will be charged a $2 shipping fee<br/>
+        A subtotal $50 - $99.99 will be charged a $5 shipping fee<br/>
+        Subtotals over $100 will be charged 5% shipping fee of the subtotal amount</b>
     </body>
 </html>
