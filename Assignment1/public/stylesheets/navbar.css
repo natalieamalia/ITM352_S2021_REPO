@@ -1,0 +1,29 @@
+/*This stylesheet styles my surf store navbar, copied from W3 Schools example https://www.w3schools.com/howto/howto_js_topnav.asp*/
+/* Adds a black background color to the top navigation */
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: powderblue;
+  position: sticky; /* navbar remains in place when scrolling up & down the page */
+  top: 0;
+  width: 100%;
+}
+li {
+  float: left;
+}
+li a {
+  display: block;
+  color: black;
+  font-size: 18pt;
+  text-align: center;
+  padding: 20px 20px;
+  text-decoration: none;
+}
+li a:hover:not(.active) {
+  background-color: whitesmoke;
+}
+.active {
+  background-color: whitesmoke;
+  }
