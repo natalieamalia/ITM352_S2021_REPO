@@ -33,22 +33,20 @@
     <ul>
         <li style="float:left"><a href="./index.html">Home</a></li>
         <li style="float:center"><a href="./products_display.html">Products</a></li>
-        <li style="float:right"><a href="./invoice.html">Checkout</a></li>
-    </ul>
-      <a href="./invoice.html">
+        <li style="float:right"><a class="active" href="./invoice.html">Checkout</a></li>
 </head>
     <!-- Generates a table for the invoice displaying quantity, price, and extended price rows. Using examples from Invoice 4 and Lab 9 in class-->
-    <body>
-		<div class="invoice-box">
-			<table cellpadding="0" cellspacing="0">
-				<tr class="top">
-					<td colspan="2">
-						<table>
-							<tr>
-                                <img src= "images/surfco.jpg" style="width: 100%; max-width: 300px" td class="title"><br>Kaka'ako Surf Co. Order Invoice</br>
-								</td>
-    <table>
-        <table border="0">
+    <div class="row">
+        <div class="col-25">
+            <div class="container">
+                <!--Invoice table-->
+                    <table>
+                                 <tr>
+                                            <img src="images/surfco.jpg" style="width: 100%; max-width: 300px" td
+                                                class="title"><br>Kaka'ako Surf Co. Order Invoice</br>
+                                </td>
+                                <table>
+                                    <table border="0">
             <tbody>
                 <tr>
                     <th style="text-align: left;" width="40%">Product</th>
@@ -116,31 +114,56 @@
     </div>
 </div> 
 
-<!--Checkout Form Template from w3schools.com-->
-        <div class="col-50">
-          <h3>Payment</h3>
-          </div>
-          <label for="cname">Name on Card:</label>
-          <input type="text" id="cname" name="cardname" placeholder="Ex: Natalie Amalia">
-          <br>
-          <label for="ccnum">Card Number:</label>
-          <input type="text" id="ccnum" name="cardnumber" placeholder="5555-5555-5555-5555">
-          <br>
-          <label for="expmonth">Expiration Date:</label>
-          <input type="text" id="expmonth" name="expmonth" placeholder="MM/DD">
-          <br>
-            <label for="cvv">CVV: </label>
-            <input type="text" id="cvv" name="cvv" placeholder="555">
+ <!--Checkout Form Template from w3schools.com-->
+ <div class="col-75">
+    <div class="container">
+    <form name="complete_purchase" action="./complete_purchase.html" method="GET">
+<!--Billing address form--> 
+    <div class="row">
+    <div class="col-50">
+    <h3>Billing Address</h3> 
+    <!--Name-->
+      <label for="fname"><i class="fa fa-user"></i>Full Name:</label>
+          <input type="text" id="fname" name="firstname" placeholder="ITM352 Grader">
+          <label for="email"><i class="fa fa-envelope"></i>Email:</label>
+              <input type="text" id="email" name="email" placeholder="itm352@hawaii.edu">
+    <!--Address-->
+          <label for="adr"><i class="fa fa-address-card-o"></i>
+            <br>Address:</label>
+              <input type="text" id="adr" name="address" placeholder="2404 Maile Way">
+          <label for="city"><i class="fa fa-institution"></i> City:</label>
+              <input type="text" id="state" name="state" placeholder="Honolulu">
+    <div class="row">
+    <div class="col-50">
+          <label for="state">State:</label>
+              <input type="text" id="state" name="state" placeholder="HI">
+    <div class="col-50">
+          <label for="zip">Zipcode:</label>
+              <input type="text" id="zip" name="zip" placeholder="96822">
             </div>
-          </div>
         </div>
-      </div>
-    </form>
-      <!--This button redirects user to the purchase.html upon completing their purchase, using example from button as link example https://www.w3schools.com/html/html_links.asp-->
-    <div>
-        <!--Creates a purchase button-->
-        <input type = "Submit" name = "submitPurchase" value = "Checkout!" class="button">
     </div>
+<!--Creates a form for payment options with placeholders so customers can see example inputs-->
+    <div class="col-50">
+    <h3>Payment</h3>
+        <label for="cname">Name on Card:</label>
+              <input type="text" id="cname" name="cardname" placeholder="ITM352 Grader">
+        <label for="ccnum">Card Number:</label>
+              <input type="text" id="ccnum" name="cardnumber" placeholder="5555-5555-5555-5555">
+        <br>
+        <label for="expmonth">Exp. Date:</label>
+              <input type="text" id="expmonth" name="expmonth" placeholder="MM/YY">
+    <div class="col-50">
+        <label for="cvv">CVV:</label>
+              <input type="text" id="cvv" name="cvv" placeholder="123">
+      </div>
+    </div>
+  </div>
 </div>
-</body>
+<!--Complete purchase button-->
+          <br><input type="submit" value="Complete purchase!" class="btn">
+        </form>
+      </div>
+    </div> 
+  </body>
 </html>

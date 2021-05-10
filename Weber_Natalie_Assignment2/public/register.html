@@ -1,13 +1,17 @@
-<!--Natalie's Login Page created using examples from LAB 14 and "Getting Started with Assignment 2" Screencast-->
+<!--Natalie's Registration Page created using examples from LAB 14 and "Getting Started with Assignment 2" Screencast-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <script>
+        // Modified example code from Lab 14 that informs user of username and password errors
         let params = (new URL(document.location)).searchParams;
-        window.onload = function () { //Creates function for window.onload that executes when page is loaded
+        window.onload = function () {
             if (params.has('errors')) {
                 console.log("invalid");
-                alert('Fix the following errors: \n' + params.get('errors')); //Notifies user of registration errors in console
+                alert('Fix the following errors: \n' + params.get('errors'));
+                Register["fullname"].value=params.get("fullname");
+                Register["username"].value=params.get("username");
+                Register["email"].value=params.get("email");
             }
         }    
     </script>
@@ -33,19 +37,17 @@
     <!--Navbar-->
     <ul>
         <li style="float:left"><a href="./index.html">Home</a></li>
-        <li><a href="./products_display.html">Products</a></li>
-        <li><a class="active" href="./login.html">Login</a></li>
-        <li><a href="./register.html">Register</a></li>
-        <li><a href="./invoice.html">Checkout</a></li>
-      </ul>
+        <li style="float:center"><a href="./products_display.html">Products</a></li>
+        <li style="float:right"><a href="./invoice.html">Checkout</a></li>
+        <li style="float:right"><a class="active" href="./login.html">Login</a></li>
+    </ul>
+    
     <h1>Kaka'ako Surf Co. Member Registration</h1>
     <!--Registration form created using code from w3schools.com-->
     <div id='account'>
         <form method="POST" action="process_register" name="Register">
-            <input type="text" name="first name" size="40" pattern="[a-zA-Z]+[ ]+[a-zA-Z]+"
-                placeholder="Enter First Name"><br/>
-            <input type="text" name="last name" size="40" pattern="[a-zA-Z]+[ ]+[a-zA-Z]+"
-                placeholder="Enter Last Name"><br/>
+            <input type="text" name="fullname" size="40" pattern="[a-zA-Z]+[ ]+[a-zA-Z]+"
+                placeholder="Full Name"><br/>
             <input type="text" name="username" size="40" pattern=".[a-z0-9]{3,10}" required
                 title="Minimum 4 Characters, Maximum 10 Characters, Numbers/Letters Only"
                 placeholder="Enter Username"><br />

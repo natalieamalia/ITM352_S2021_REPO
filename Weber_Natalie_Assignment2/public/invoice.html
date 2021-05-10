@@ -7,9 +7,14 @@
 <script>
     //code referenced from Assignment 1 examples and Invoice WODS
     let params = (new URL(document.location)).searchParams; //takes data from query called submitPurchase, if it has it then it looks for the quantities
+    if (params.has("username") == false) { //This requires users to login/register to access invoice
+        alert("Please login or register to view your subtotal!");
+        location.href = "./login.html";
+        window.stop;
+    }
     var quantities = [];
     // processing the invoice to create the form from the data entered
-    if (params.has('submitPurchase')) { // loop that pulls information
+    if (params.has('submitPurchase')) { //Loop that generates product information
         for (i = 0; i < products.length; i++) {
             if (params.has(`quantity${i}`)) {
                 a_qty = params.get(`quantity${i}`);
@@ -18,13 +23,14 @@
         }
 
     } else {
-        window.location.href = './products_display.html'; //Sends user back to the products_display if there are no quantities entered
-        }
-        if (params.has('username')) {
-          var name = params.get('name');
-          var username = params.get('username');
-        }
-      </script>  
+        document.write('Please add products to complete your purchase!');
+    } //if invalid quantities are entered in the textboxes, this else statement sends the user back to the product display page to select valid quantitiy amounts
+    console.log(quantities); //Prints out quantities
+    if (params.has('username')) {
+        var name = params.get('name');
+        var username = params.get('username');
+    }
+</script>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,9 +40,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      <title>Checkout</title>
-        <link rel="stylesheet" href="./stylesheets/navbar.css">
-        <link rel="stylesheet" href="./stylesheets/checkout.css">
+    <title>Invoice</title>
+    <link rel="stylesheet" href="./stylesheets/navbar.css">
+    <link rel="stylesheet" href="./stylesheets/invoice.css">
+    <script>
+        //Identifies username for personalization and thanks user for purchase
+        if (fullname != 'undefined' && fullname != '') {
+            document.write (`<h4> Thank you<font color="black"><i>${fullname}</i></font>for shopping with Kaka'ako Surf Co.<br>Please enter your payment information to complete your purchase!<h4>
+          `)
+        } else {
+            document.write (`<h4> Thank you<font color="black"><i>${username}</i></font>for shopping with Kaka'ako Surf Co.<br>Please enter your payment information to complete your purchase!<h4>
+          `)
+        }
+      </script> 
     <style>
         body {
             text-align: center;
@@ -46,116 +62,158 @@
             background-attachment: fixed;
             background-size: cover;
         }
+
         h2 {
             color: white;
         }
+
         h3 {
             color: white;
         }
     </style>
-    </head>
+</head>
 
-    <body>
-    <!--Creates a navbar using code from my ITM 352 Assignment 3 navbar last semester-->
-    <ul>
-        <li style="float:left"><a href="./index.html">Home</a></li>
-        <li><a href="./products_display.html">Products</a></li>
-        <li><a class="active" href="./login.html">Login</a></li>
-        <li><a href="./register.html">Register</a></li>
-        <li><a href="./invoice.html">Checkout</a></li>
-      </ul>
-    
-    <script>
-        //This identifies a user's account and purchase information
-        if (name != 'undefined' && name != '') {
-              document.write (`
-                <h3 align="center"> Thank you ${name} for choosing Kaka'ako Surf Co!
-                  <br> Please review your purchase and submit it below! <h3>
-              `)
-            }
-    </script>
-    <!-- Generates a table for the invoice displaying quantity, price, and extended price rows. Using examples from Invoice 4 and Lab 9 in class-->
-    <div class="row">
-        <div class="col-25">
-          <div class="container">
-            <!--Invoice table--> 
-    <table>
-        <table border="2">
-            <tbody>
-                <tr>
-                    <th style="text-align: left;" width="40%">Product</th>
-                    <th width="20%">Quantity</th>
-                    <th width="20%">Price</th>
-                    <th width="20%">Extended Price</th>
-                </tr>
-                <script>
-                    subtotal = 0
-                    for (i = 0; i < products.length; i++) {
-                        if (quantities[i] > 0) {// product row
-                            extended_price = quantities[i] * products[i].price
-                            subtotal += extended_price;
-                            document.write(`
+<!--Creates a navbar using code from my ITM 352 Assignment 3 navbar last semester-->
+<ul>
+    <li style="float:left"><a href="./index.html">Home</a></li>
+    <li style="float:center"><a href="./products_display.html">Products</a></li>
+    <li style="float:right"><a class="active" href="./invoice.html">Checkout</a></li>
+    <li style="float:right"><a href="./login.html">Login</a></li>
+</ul>
+
+<!-- Generates a table for the invoice displaying quantity, price, and extended price rows. Using examples from Invoice 4 and Lab 9 in class-->
+<div class="row">
+    <div class="col-25">
+        <div class="container">
+            <!--Invoice table-->
+                <table>
+                             <tr>
+                                        <img src="images/surfco.jpg" style="width: 100%; max-width: 300px" td
+                                            class="title"><br>Kaka'ako Surf Co. Order Invoice</br>
+                            </td>
+                            <table>
+                                <table border="0">
+                                    <tbody>
+                                        <tr>
+                                            <th style="text-align: left;" width="40%">Product</th>
+                                            <th style="text-align: center;" width="20%">Quantity</th>
+                                            <th style="text-align: right;" width="20%">Price</th>
+                                        </tr>
+                                        <script>
+                                            subtotal = 0
+                                            for (i = 0; i < products.length; i++) {
+                                                if (quantities[i] > 0) {// product row
+                                                    extended_price = quantities[i] * products[i].price
+                                                    subtotal += extended_price;
+                                                    document.write(`
             <tr>
             <td style="text-align: left;" width="40%">${products[i].name}</td>
-            <td width="20%">${quantities[i]}</td>
-            <td width="20%">\$${products[i].price}</td>
-            <td width="20%">\$${extended_price.toFixed(2)}</td>
+            <td style="text-align: center;" width="20%">${quantities[i]}</td>
+            <td style="text-align: right;" width="20%">\$${extended_price.toFixed(2)}</td>
             </tr>
           `);
-                        }
-                    }
-                    // Computes tax
-                    var tax_rate = 0.05;
-                    var tax = tax_rate * subtotal;
+                                                }
+                                            }
+                                            // Computes tax
+                                            var tax_rate = 0.05;
+                                            var tax = tax_rate * subtotal;
 
-                    // Computes shipping
-                    shipping = 0.05 * subtotal; // 5% of subtotal
+                                            // Computes shipping
+                                            shipping = 0.05 * subtotal; // 5% of subtotal
 
-                    // Compute grand total
-                    var total = subtotal + tax + shipping;
+                                            // Compute grand total
+                                            var total = subtotal + tax + shipping;
 
-                </script>
-                <tr>
-                    <td colspan="4" width="100%">&nbsp;</td>
-                </tr>
+                                        </script>
+                                        <tr>
+                                            <td colspan="4" width="100%">&nbsp;</td>
+                                        </tr>
 
-                <tr>
-                    <td style="text-align: center;" colspan="3" width="67%">Sub-total</td>
-                    <td width="54%">$
-                        <script>document.write(subtotal.toFixed(2));</script>
-                    </td>
-                </tr>
+                                        <tr>
+                                            <td style="text-align: left;" colspan="3" width="67%">Sub-total</td>
+                                            <td width="54%">$
+                                                <script>document.write(subtotal.toFixed(2));</script>
+                                            </td>
+                                        </tr>
 
-                <tr>
-                    <td colspan="3" width="67%"><span>Tax at
-                            <script>document.write(100 * tax_rate);</script>%
-                        </span></td>
-                    <td width="54%">$
-                        <script>document.write(tax.toFixed(2));</script>
-                    </td>
-                </tr>
+                                        <tr>
+                                            <td style="text-align: left;" colspan="3" width="67%"><span>Tax</span></td>
+                                            <td width="54%">$
+                                                <script>document.write(tax.toFixed(2));</script>
+                                            </td>
+                                        </tr>
 
-                <tr>
-                    <td colspan="3" width="67%">Shipping</span></td>
-                    <td width="54%">$
-                        <script>document.write(shipping.toFixed(2));</script>
-                    </td>
-                </tr>
+                                        <tr>
+                                            <td style="text-align: left;" colspan="3" width="67%">Shipping</span></td>
+                                            <td width="54%">$
+                                                <script>document.write(shipping.toFixed(2));</script>
+                                                <div style="text-align: left;" class="col-50">
+                                                    A shipping fee of 5% of the subtotal will be applied to every order.
+                                            </td>
+                                        </tr>
 
-                <tr>
-                    <td colspan="3" width="67%"><strong>Total</strong></td>
-                    <td width="54%"><strong>$
-                            <script>document.write(total.toFixed(2));</script>
-                        </strong></td>
-                </tr>
-            </tbody>
-        </table> 
-      </div>
-    </div> 
-        <b><span style="font-weight: bold;">
-                OUR SHIPPING POLICY:
-            </span><br>
-            A shipping fee of 5% of the subtotal will be applied to every order.
-        </b>
-        </body>
-</html>
+                                        <tr>
+                                            <td style="text-align: left;" colspan="3" width="67%"><strong>Total</strong>
+                                            </td>
+                                            <td width="54%"><strong>$
+                                                    <script>document.write(total.toFixed(2));</script>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                </div>
+        </div>
+        <!--Checkout Form Template from w3schools.com-->
+        <div class="col-75">
+            <div class="container">
+            <form name="complete_purchase" action="./complete_purchase.html" method="GET">
+        <!--Billing address form--> 
+            <div class="row">
+            <div class="col-50">
+            <h3>Billing Address</h3> 
+            <!--Name-->
+              <label for="fname"><i class="fa fa-user"></i>Full Name:</label>
+                  <input type="text" id="fname" name="firstname" placeholder="ITM352 Grader">
+                  <label for="email"><i class="fa fa-envelope"></i>Email:</label>
+                      <input type="text" id="email" name="email" placeholder="itm352@hawaii.edu">
+            <!--Address-->
+                  <label for="adr"><i class="fa fa-address-card-o"></i>
+                    <br>Address:</label>
+                      <input type="text" id="adr" name="address" placeholder="2404 Maile Way">
+                  <label for="city"><i class="fa fa-institution"></i> City:</label>
+                      <input type="text" id="state" name="state" placeholder="Honolulu">
+            <div class="row">
+            <div class="col-50">
+                  <label for="state">State:</label>
+                      <input type="text" id="state" name="state" placeholder="HI">
+            <div class="col-50">
+                  <label for="zip">Zipcode:</label>
+                      <input type="text" id="zip" name="zip" placeholder="96822">
+                    </div>
+                </div>
+            </div>
+        <!--Creates a form for payment options with placeholders so customers can see example inputs-->
+            <div class="col-50">
+            <h3>Payment</h3>
+                <label for="cname">Name on Card:</label>
+                      <input type="text" id="cname" name="cardname" placeholder="ITM352 Grader">
+                <label for="ccnum">Card Number:</label>
+                      <input type="text" id="ccnum" name="cardnumber" placeholder="5555-5555-5555-5555">
+                <br>
+                <label for="expmonth">Exp. Date:</label>
+                      <input type="text" id="expmonth" name="expmonth" placeholder="MM/YY">
+            <div class="col-50">
+                <label for="cvv">CVV:</label>
+                      <input type="text" id="cvv" name="cvv" placeholder="123">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Complete purchase button-->
+                  <br><input type="submit" value="Complete purchase!" class="btn">
+                </form>
+              </div>
+            </div> 
+          </body>
+        </html>

@@ -2,12 +2,15 @@
 //Code for server copied from Lab 13, Lab 14, Assignment 1, and my assignments from Fall 2020
 var data = require('./public/products.js'); //sets products.js file and set to variable 'data'
 var products = data.products; // sets variable 'products_array' to the products array in the products.js file
-const qs = require('qs'); //Sets variable "querystring" to require querystring module
+var qs = require('qs'); //Sets variable "querystring" to require querystring module
 var express = require('express'); //begins and caches express module
 var app = express(); //set express to variable 'app'
 var myParser = require("body-parser"); //loads and chaches body-parser module as variable "myParser"
+
 var filename = 'user_data.json'; //Sets user_data.json to variable "filename"
 var fs = require('fs'); //Loads file system
+const{request} = require('express');
+const { stringify } = require('querystring');
 
 //Processes incoming requests
 app.all('*', function (request, response, next) { //for all request methods...
@@ -17,47 +20,46 @@ app.all('*', function (request, response, next) { //for all request methods...
 
 app.use(myParser.urlencoded({ extended: true })); //retrieves data from the body 
 
-//Function for processing user logins
+//Function for processing user logins modified from Lab 14 and class screencasts
 if (fs.existsSync(filename)) { //If filename exists...
     stats = fs.statSync(filename) //Get user information from user_data.json file
     console.log(filename + 'has' + stats.size + 'characters'); 
     //Writes character size of file in the console
-  
     data = fs.readFileSync(filename, 'utf-8');
     users_reg_data = JSON.parse(data); //Read existing file and parse user data
   } else { 
     console.log(filename + 'does not exist! Please register.'); //Displays error if file does not exist
   }
 
-//Processes an existing users's login through post method 
-app.post("/process_login", function (req, res) {
+//Processes an existing users's login through post method using examples from Lab 14 and screencasts
+app.post("/process_login", function (req, res, next) {
     var LogError = [];
     console.log(req.query); //Requests query string
-    the_username = req.body.username.toLowerCase(); //Sets username to all lowercase
-    if (typeof users_reg_data[the_username] != 'undefined') { //If the username data does not equal undefined...
-        if (users_reg_data[the_username].password == req.body.password) {
-            req.query.username = the_username; 
+    username = req.body.username.toLowerCase(); //Sets username to all lowercase
+    if (typeof users_reg_data[username] != 'undefined') { //If the username data does not equal undefined...
+        if (users_reg_data[username].password == req.body.password) {
+            req.query.username = username; 
             console.log(users_reg_data[req.query.username].name);
             req.query.name = users_reg_data[req.query.username].name
-            res.redirect('/invoice.html?' + queryString.stringify(req.query));
+            res.redirect('/invoice.html?' + qs.stringify(req.query));
             return; //Redirects to invoice if no errors are encountered
         } else { //Invalid password error
             LogError.push = ('Invalid password');
             console.log(LogError);
-            req.query.username= the_username;
-            req.query.name= users_reg_data[the_username].name;
+            req.query.username= username;
+            req.query.name= users_reg_data[username].name;
             req.query.LogError=LogError.join(';');
         }
         } else { //Invalid username error
             LogError.push = ('Invalid username');
             console.log(LogError);
-            req.query.username= the_username;
+            req.query.username= username;
             req.query.LogError=LogError.join(';');
         } //Redircts to login if there are username and password errors
-    res.redirect('./login.html?' + queryString.stringify(req.query));
+    res.redirect('./login.html?' + qs.stringify(req.query));
 });
 
-//Registers a new user account using the post method 
+//Registers a new user account server side processing and post method 
 app.post("/process_register", function (req, res) {
     qstr = req.body
     console.log(qstr);
@@ -90,29 +92,25 @@ app.post("/process_register", function (req, res) {
       errors.push('Password is not a match')
     }
     //User's registration is saved in user_data.json if there are no errors
+    req.query.fullname = req.body.fullname;
+    req.query.username = req.body.username;
+    req.query.email = req.body.email; 
     if (errors.length == 0) {
-      POST = req.body
       console.log('No errors')
-      var username = POST['username']
+      var username = req.body.username;
       users_reg_data[username] = {}; //make it 'users'
-      users_reg_data[username].name = username;
-      users_reg_data[username].password= POST['password'];
-      users_reg_data[username].email = POST['email'];
+      users_reg_data[username].name = req.body.name;
+      users_reg_data[username].password= req.body.password; 
+      users_reg_data[username].email = req.body.email; 
       data = JSON.stringify(users_reg_data); //change to users 
       fs.writeFileSync(filename, data, "utf-8");
-      res.redirect('./invoice.html?' + queryString.stringify(req.query)); //Redirects to invoice upon successful registration
+      res.redirect('./invoice.html?' + qs.stringify(req.query)); //Redirects to invoice upon successful registration
     }
-    //Logs errors in console
-    if (errors.length > 0) {
-        console.log(errors)
-        req.query.name = req.body.name;
-        req.query.username = req.body.username;
-        req.query.password = req.body.password;
-        req.query.repeat_password = req.body.repeat_password;
-        req.query.email = req.body.email;
-
+    //Logs errors in console and redirects to registration page
+    else {
+      console.log(errors)
         req.query.errors = errors.join(';');
-        res.redirect('register.html?' + queryString.stringify(req.query)); //Redirects to register.html if there are errors
+        res.redirect('register.html?' + qs.stringify(req.query)); //Redirects to register.html if there are errors
     }
 });
 
@@ -120,23 +118,24 @@ app.post("/process_purchase", function (request, response) {
     let POST = request.body;
     //Checks if quantities are nonnegative integers 
     if (typeof POST['submitPurchase'] != 'undefined') {
-        var validquantities = true; //Creates variable for valid quantities
-        var quantities = false //Creates variable for invalid quantities
-        for (i = 0; i < products.length; i++) {
-            qty = POST[`quantity${i}`];
-            quantities = quantities || qty > 0;
-            //If quantity value is greater than 0 than the quantity is valid
-            validquantities = validquantities && isNonNegInt(qty);
-        }
-        //Generates invoice if quantities are valid
-        const stringified = qs.stringify(POST);
-        if (validquantities && quantities) {
-            response.redirect("./invoice.html?" + stringified);
-        }
-        else {
-            response.redirect("./products_display.html?" + stringified)
-        } //Redirects to products_display if quantities are invalid
-    }
+      var hasvalidquantities = true; // creating a varibale assuming that it'll be true
+      var hasquantities = false
+      for (i = 0; i < products.length; i++) {
+          qty = POST[`quantity${i}`];
+          hasquantities = hasquantities || qty > 0;
+          // If quantity value is greater than 0 than the quantity is valid
+          hasvalidquantities = hasvalidquantities && isNonNegInt(qty);
+      }
+      const stringify = qs.stringify(POST); // If all quantities are valid this generates the invoice
+      console.log (hasvalidquantities, hasquantities);
+      if (hasvalidquantities && hasquantities) {
+          response.redirect("./login.html?" + stringify);
+          return;
+      }
+      else {
+          response.redirect("./products_display.html?" + stringify)
+      }
+  }
 });
 
 //isNonNegInt function from products_display.html file 
