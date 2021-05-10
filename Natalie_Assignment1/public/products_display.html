@@ -13,7 +13,7 @@
     }
     function checkQuantityTextbox(qtyTextboxObj) {
         var errs = isNonNegInt(qtyTextboxObj.value, true); //Checks quantity textbox
-        qty_textbox_message.innerHTML = errors.join(',');
+        document.getElementById(qtyTextboxObj.name + '_message').innerHTML = errors.join(',');
     }
     window.onload = function () {
         let params = (new URL(document.location)).searchParams; //Params gets the query string with the form data
@@ -32,14 +32,11 @@
                     }
                 }
             }
-            //Responds to errors or redirects to invoice if there are no erros
+            //Responds to errors or redirects to invoice if there are no errors
             if (has_errors) {
                 alert("Please enter valid quantities!");
             } else if (total_qty == 0) { // no quantity selections
                 alert("Please select quantities!");
-            } else { // all good to go!
-                window.location = `./invoice.html${document.location.search}`; //Redirects to invoice
-                window.stop;
             }
         }
     }
@@ -52,6 +49,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaka'ako Surf Co.</title>
+    <link rel="stylesheet" href="./stylesheets/navbar.css">
     <link rel="stylesheet" href="./stylesheets/products-style.css">
 </head>
 
@@ -73,11 +71,13 @@
         }
     </style>
     <!--Creates a navbar using code from my ITM 352 Assignment 3 navbar last semester-->
-    <a href="./index.html" style="float:left">Home</a>
-    <a class="active" href="./products_display.html" style="float:center">Surfboards</a>
-    <a href="./invoice.html" style="float:right">Shopping Cart</a>
+    <ul>
+        <li style="float:left"><a href="./index.html">Home</a></li>
+        <li style="float:center"><a href="./products_display.html">Products</a></li>
+        <li style="float:right"><a href="./invoice.html">Checkout</a></li>
+    </ul>
     <!--Creates a product_display page with product name, image, price and quantity textbox-->
-    <form name="product_main_display" action="/process_purchase" method="POST">
+    <form name="product_form" action="/process_purchase" method="POST">
         <div>
             <main>
                 <script>
@@ -90,6 +90,7 @@
                                       <label id="quantity${i}_label"}">Quantity</label>
                                       <input type="text" placeholder="0" name="quantity${i}" 
                                       onkeyup="checkQuantityTextbox(this);">
+                                      <div id = "quantity${i}_message"></div>
                                   </section>
                               `);
                     }
@@ -98,7 +99,7 @@
         </div>
         <footer>
             <!--Creates a purchase button-->
-            <input type="submit" value="Submit purchase!" name="submitPurchase">
+            <input type = "Submit" name = "submitPurchase" value = "Submit Purchase">
         </footer>
     </form>
 </body>

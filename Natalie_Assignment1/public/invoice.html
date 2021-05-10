@@ -6,7 +6,7 @@
     let params = (new URL(document.location)).searchParams; //takes data from query called submitPurchase, if it has it then it looks for the quantities
     var quantities = [];
     // processing the invoice to create the form from the data entered
-    if (params.has('submitPurchase')) { // loop that pulls information
+    if (params.has('submitPurchase')) { //Loop that generates product information
         for (i = 0; i < products.length; i++) {
             if (params.has(`quantity${i}`)) {
                 a_qty = params.get(`quantity${i}`);
@@ -15,41 +15,45 @@
         }
 
     } else {
-        document.write('Please select a valid quantity to complete purchase!');
+        document.write('Please add products to complete your purchase!');
     } //if invalid quantities are entered in the textboxes, this else statement sends the user back to the product display page to select valid quantitiy amounts
-    console.log(quantities); //prints out quantities
+    console.log(quantities); //Prints out quantities
 </script>
 
 <!DOCTYPE html>
 <html lang="en">
 <!-- Linking of font and stylesheets-->
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Invoice</title>
+    <title>Invoice</title>
     <link rel="stylesheet" href="./stylesheets/navbar.css">
-    <style>
-        body {
-            font-family: 'Times New Roman', 'Serif';
-            text-align: center;
-            background-image: url(./images/ocean.gif);
-        }
-    </style>
+    <link rel="stylesheet" href="./stylesheets/invoice.css">
     <!--Creates a navbar using code from my ITM 352 Assignment 3 navbar last semester-->
-    <a href="./index.html" style="float:left">Home</a>
-    <a href="./products_display.html" style="float:center">Surfboards</a>
-    <a class="active" href="./invoice.html" style="float:right">Shopping Cart</a>
-    <h1>Kaka'ako Surf Co. Order Invoice</h1>
+    <ul>
+        <li style="float:left"><a href="./index.html">Home</a></li>
+        <li style="float:center"><a href="./products_display.html">Products</a></li>
+        <li style="float:right"><a href="./invoice.html">Checkout</a></li>
+    </ul>
+      <a href="./invoice.html">
+</head>
     <!-- Generates a table for the invoice displaying quantity, price, and extended price rows. Using examples from Invoice 4 and Lab 9 in class-->
+    <body>
+		<div class="invoice-box">
+			<table cellpadding="0" cellspacing="0">
+				<tr class="top">
+					<td colspan="2">
+						<table>
+							<tr>
+                                <img src= "images/surfco.jpg" style="width: 100%; max-width: 300px" td class="title"><br>Kaka'ako Surf Co. Order Invoice</br>
+								</td>
     <table>
-        <table border="2">
+        <table border="0">
             <tbody>
                 <tr>
                     <th style="text-align: left;" width="40%">Product</th>
-                    <th width="20%">Quantity</th>
-                    <th width="20%">Price</th>
-                    <th width="20%">Extended Price</th>
+                    <th style="text-align: center;" width="20%">Quantity</th>
+                    <th style="text-align: right;" width="20%">Price</th>
                 </tr>
                 <script>
                     subtotal = 0
@@ -60,9 +64,8 @@
                             document.write(`
             <tr>
             <td style="text-align: left;" width="40%">${products[i].name}</td>
-            <td width="20%">${quantities[i]}</td>
-            <td width="20%">\$${products[i].price}</td>
-            <td width="20%">\$${extended_price.toFixed(2)}</td>
+            <td style="text-align: center;" width="20%">${quantities[i]}</td>
+            <td style="text-align: right;" width="20%">\$${extended_price.toFixed(2)}</td>
             </tr>
           `);
                         }
@@ -78,21 +81,16 @@
                     var total = subtotal + tax + shipping;
 
                 </script>
-                <tr>
-                    <td colspan="4" width="100%">&nbsp;</td>
-                </tr>
 
                 <tr>
-                    <td style="text-align: center;" colspan="3" width="67%">Sub-total</td>
+                    <td style="text-align: left;" colspan="3" width="67%">Sub-total</td>
                     <td width="54%">$
                         <script>document.write(subtotal.toFixed(2));</script>
                     </td>
                 </tr>
 
                 <tr>
-                    <td colspan="3" width="67%"><span>Tax at
-                            <script>document.write(100 * tax_rate);</script>%
-                        </span></td>
+                    <td colspan="3" width="67%"><span>Tax</span></td>
                     <td width="54%">$
                         <script>document.write(tax.toFixed(2));</script>
                     </td>
@@ -102,6 +100,8 @@
                     <td colspan="3" width="67%">Shipping</span></td>
                     <td width="54%">$
                         <script>document.write(shipping.toFixed(2));</script>
+                        <div style="text-align: left;" class="col-50">
+                        A shipping fee of 5% of the subtotal will be applied to every order.
                     </td>
                 </tr>
 
@@ -113,11 +113,34 @@
                 </tr>
             </tbody>
         </table>
-        <b><span style="font-weight: bold;">
-                OUR SHIPPING POLICY:
-            </span><br>
-            A shipping fee of 5% of the subtotal will be applied to every order.
-        </b>
-        </body>
+    </div>
+</div> 
 
+<!--Checkout Form Template from w3schools.com-->
+        <div class="col-50">
+          <h3>Payment</h3>
+          </div>
+          <label for="cname">Name on Card:</label>
+          <input type="text" id="cname" name="cardname" placeholder="Ex: Natalie Amalia">
+          <br>
+          <label for="ccnum">Card Number:</label>
+          <input type="text" id="ccnum" name="cardnumber" placeholder="5555-5555-5555-5555">
+          <br>
+          <label for="expmonth">Expiration Date:</label>
+          <input type="text" id="expmonth" name="expmonth" placeholder="MM/DD">
+          <br>
+            <label for="cvv">CVV: </label>
+            <input type="text" id="cvv" name="cvv" placeholder="555">
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+      <!--This button redirects user to the purchase.html upon completing their purchase, using example from button as link example https://www.w3schools.com/html/html_links.asp-->
+    <div>
+        <!--Creates a purchase button-->
+        <input type = "Submit" name = "submitPurchase" value = "Checkout!" class="button">
+    </div>
+</div>
+</body>
 </html>

@@ -30,4 +30,7 @@ products = [
     "description": "The Rad Ripper is the latest within Lost Surfboard’s “Post Modern Retro” collection. The entry rocker has been relaxed to allow for faster paddling and earlier entry into the wave. The tail has been switched to provide glide and lift over mushy waves and easily connects sections. Performance is not lost with a hefty tail rocker and aggressive double concave which gives the board a responsive lively-ness to it.",
     "image": "./images/radripper.jpg"
     }
-]
+];
+if (typeof module != "undefined") {
+    module.exports.products = products;
+}
