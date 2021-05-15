@@ -1,0 +1,174 @@
+<!--Kaka'ako Surf Co. Product Display Page-->
+<!--Accesses allProducts from products.js-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./products.js" type="text/javascript"> //Loads products.js in the reegistration page </script>
+    <script src="./functions.js" type="text/javascript"> //Loads functions.js in the reegistration page </script>
+    <script src="./user_data.json" type="json"></script>
+    <script>
+        let params = (new URL(document.location)).searchParams; //GETs query string and check that the quantities are valid
+        var product_key = params.get("product_key");
+        var products = allProducts[product_key];
+    </script>
+    <title>Kaka'ako Surf Co.</title>
+    <link rel="stylesheet" href="./stylesheets/navbar.css">
+    <link rel="stylesheet" href="./stylesheets/products_display.css">
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            background-image: url(./images/ocean.gif);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        h2 {
+            color: white;
+        }
+
+        h3 {
+            color: white;
+        }
+    </style>
+    <script type="text/javascript">
+        //This loads functions from functions.js
+        navbar();
+
+        function getCookie(cname) { //Function copied and modified from Lab 15 "Cookies and Sessions" and w3schools.com example https://www.w3schools.com/js/js_cookies.asp
+            var name = cname + "="; //Sets cookie name
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        //Saves products to shopping cart, sessionStorage and structure derived from https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+        function saveProduct(i) {
+            var productQty = product_form[`quantity${i}`].value;
+            if (isNonNegInt(productQty) == true) {
+                sessionStorage[`${products}${i}`] = productQty; // Save product quantity to session
+                alert('Successfully added to cart!'); // Inform the user that they successfully added an item to the cart
+            }
+            else {
+                alert('Oops! We couldn’t add that to the cart!'); // Inform the user that there was an error
+            };
+            window.location.reload();
+        }
+
+        //functions from Lab 12 order_page.html and Assignment 1 examples
+        function isNonNegInt(q, return_errors = false) { //Function that checks if values are postitive integers
+            errors = []; //Assumes no errors at first
+            if (q == '') { q = 0; } //Assumes blank inputs as quantity of 0 
+            if (Number(q) != q) errors.push('<font color="red">Not a number!</font>'); //Checks if string is a number
+            else if (q < 0) errors.push('<font color="red">Negative value!</font>'); //Checks if the string non-negative
+            else if (parseInt(q) != q) errors.push('<font color="red">Not a full value!</font>'); //Checks if string is an integer
+            return return_errors ? errors : (errors.length == 0); //Returns errors
+        }
+
+        function checkQuantityTextbox(qtyTextboxObj) {
+            var errs = isNonNegInt(qtyTextboxObj.value, true); //Checks quantity textbox
+            document.getElementById(qtyTextboxObj.name + '_message').innerHTML = errors.join(',');
+        }
+
+        window.onload = function () {
+            if (params.has('message')) {
+                alert(params.get("message"));
+            }
+            if (params.has('submitPurchase')) {
+                errors = false; //Assumes quanities are valid
+                total_qty = 0; //Checks that the quanitiy is greater than 0
+                for (i = 0; i < products.length; i++) {
+                    if (params.has(`quantity${i}`)) {
+                        a_qty = params.get(`quantity${i}`);
+                        //Makes textbox sticky
+                        product_form[`quantity${i}`].value = a_qty;
+                        total_qty += a_qty; //Puts data in textbox and makes textbox sticky
+                        if (!isNonNegInt(a_qty)) {
+                            has_errors = true; //If isNonNegInt has errors
+                            checkQuantityTextbox(product_form[`quantity${i}`]); //Specifies errors
+                        }
+                    }
+                }
+            }
+        }
+        //Responds to errors or redirects to checkout if there are no erros
+        if (errors) { //Display if user selects invalid quantities
+            alert("Please enter valid quantities!");
+        } else if (total_qty == 0) { //Display if no quantities are selected
+            alert("Please select quantities!");
+        }
+        // If there are no errors and quantititys are OK, process invoice
+        else {
+            window.location = `./checkout.html${document.location.search}`;
+            window.stop;
+        }
+    </script>
+
+<body>
+    <!--Creates a product_display page with product name, image, price and quantity textbox-->
+    <form name="product_form" action="/process_form" method="POST">
+        <script>
+            var user = getCookie('name');
+            var username = getCookie('username');
+
+            if (username != '') {
+                document.write(`<b>Logged in as ${username}. </b>`)
+            }
+            else {
+                document.write(`<b>Not logged in. </b>`)
+            };
+
+            var cart = sessionStorage.length;
+
+            if (cart > 0) {
+                document.write(`<b>Shopping cart has ${cart} product(s).</b>`)
+            }
+            else {
+                document.write(`<b>Shopping cart is empty.</b>`)
+            };
+        </script>
+        </div>
+        <div class="row">
+            <script>
+                for (i = 0; i < products.length; i++) {
+                    document.write(`
+                                  <section class="item">
+                                      <h2>${products[i].name}</h2>
+                                      <br><img src="${products[i].image}">
+                                      <p>$${products[i].price}</p>
+                                      <label id="quantity${i}_label"}">Quantity</label>
+                                      <input type="text" placeholder="0" name="quantity${i}" 
+                                      onkeyup="checkQuantityTextbox(this);">
+                                      <div id = "quantity${i}_message"></div>
+                                      <input class="button" type="button" value="Add to cart" name="addProduct${i}" onclick="saveProduct(${i});">
+                                  </section>
+                              `)
+                }
+                if (typeof sessionStorage[`${products}${i}`] != 'undefined') {
+                    quantity_form[`quantity${i}`].value = sessionStorage[`${products}${i}`];
+                }
+            </script>
+        </div>
+    </form>
+    <br>
+    <footer>
+        <b><h2><a href="/logout" style="color: white;">Logout</a></b></h2>
+        <h3>Kaka'ako Surf Co. &copy;2021</h3>
+    </footer>
+</body>
+
+</html>

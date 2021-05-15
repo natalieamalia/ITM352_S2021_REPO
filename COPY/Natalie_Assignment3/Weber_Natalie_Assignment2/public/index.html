@@ -1,0 +1,48 @@
+<!--This index.html page is the for my surf store products, referenced from Smartphone Products WODS in class and modified for Assignments 2 and 3 -->
+<script src="./products.js" type="text/javascript"> //Loads products.js in the reegistration page </script>
+<script src="./functions.js" type="text/javascript"> //Loads functions.js in the reegistration page </script>
+</script>
+<script>
+    let params = (new URL(document.location)).searchParams; //Retrieves product data from submitPurchase
+    var cart_data = {};
+    loadJSON('loadcart', function (response) { //Gets shopping cart data from params ad loads cart
+        cart_data = JSON.parse(response);
+    });
+</script>
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./stylesheets/navbar.css">
+    <title>Kaka'ako Surf Co.</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            background-image: url(./images/ocean.gif);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        h2 {
+            color: white;
+        }
+        h3 {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Kaka'ako Surf Co.</h1>
+    <script type="text/javascript">
+        //This loads the navbar from navbar.js
+        navbar();
+    </script>
+        <img src="images/surfco.jpg" alt="boards" class="center" height=500px>
+        </a>
+    <h3><b>Kaka'ako Surf Co.</b><br>Since 2021</h3>
+</body>
+
+</html>

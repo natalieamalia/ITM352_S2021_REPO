@@ -1,0 +1,72 @@
+<!--Natalie's Registration Page created using examples from LAB 14 and "Getting Started with Assignment 2" Screencast-->
+<script src="./products.js" type="text/javascript"> //Loads products.js in the reegistration page </script>
+<script src="./functions.js" type="text/javascript"> //Loads functions.js in the reegistration page </script>
+</script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        //Modified example code from Lab 14 that informs user of username and password errors
+        let params = (new URL(document.location)).searchParams;
+        window.onload = function () {
+            if (params.has('errors')) {
+                console.log("invalid");
+                alert('Fix the following errors: \n' + params.get('errors'));
+                Register["fullname"].value = params.get("fullname");
+                Register["username"].value = params.get("username");
+                Register["email"].value = params.get("email");
+            }
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./stylesheets/navbar.css">
+    <link rel="stylesheet" href="./stylesheets/loginregister.css">
+    <title>New User Registration</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            background-image: url(./images/ocean.gif);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        ;
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript">
+        //Loads in my navbar from navbar.js file
+        navbar();
+    </script>
+    <h1>Kaka'ako Surf Co. Member Registration</h1>
+    <!--Registration form created using code from w3schools.com-->
+    <div id='account'>
+        <form method="POST" action="process_register" name="Register">
+            <input type="text" name="fullname" size="40" pattern="[a-zA-Z]+[ ]+[a-zA-Z]+" placeholder="Full Name"><br />
+            <input type="text" name="username" size="40" pattern=".[a-z0-9]{3,10}" required
+                title="Minimum 4 Characters, Maximum 10 Characters, Numbers/Letters Only"
+                placeholder="Enter Username"><br />
+            <input type="email" name="email" size="40" placeholder="Enter Email"
+                pattern="[a-z0-9._]+@[a-z0-9]+\.[a-z]{3,}$" required title="Please enter valid email."><br />
+            <input type="password" id="password" name="password" size="40" pattern=".{6,}" required
+                title="6 Characters Minimum" placeholder="Enter Password"><br />
+            <input type="password" id="repeat_password" name="repeat_password" size="40" pattern=".{6,}" required
+                title="6 Characters Minimum" placeholder="Repeat Password"><br />
+
+            <input type="submit" value="Register" class="btn">
+        </form>
+        <script>
+            Register.action += document.location.search; //saves the query string from the products page for the invoice
+        </script>
+    </div>
+    <!--this is the button that will take users to login if they already have an account-->
+    <input type="button" name="olduser" value="Returning Users Click Here!" class="btn2"
+        onclick="window.location='./login.html' + document.location.search;">
+</body>
+</html>

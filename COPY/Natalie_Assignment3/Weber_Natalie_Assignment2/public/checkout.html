@@ -1,0 +1,179 @@
+<!--Kaka'ako Surf Co. Shopping Cart/Invoice Page-->
+<!--Code borrowed and modified from Invoice4 WOD -->
+<!--Linking of .js files for products, user_data, and functions-->
+<script src="./products.js" type="text/javascript"></script>
+<script src="./functions.js" type="text/javascript"></script>
+<script src="./user_data.json" type="json"></script>
+
+<script>
+    let params = (new URL(document.location)).searchParams; //Retrieves data from submitPurchase
+
+    // Get the shopping cart data
+    var cart_data = {};
+    loadJSON('loadcart', function (response) {
+        cart_data = JSON.parse(response);
+    });
+
+    //Personalizes invoice of user with fullname and username
+    if (params.has('username')) {
+        var fullname = params.get('fullname');
+        var username = params.get('username');
+    };
+</script>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaka'ako Surf Co. Shopping Cart</title>
+    <link rel="stylesheet" href="./stylesheets/navbar.css">
+    <link rel="stylesheet" href="./stylesheets/checkout.css">
+    <script type="text/javascript">
+        navbar(); // This calls my navbar info from navbar.js
+    </script>
+</head>
+
+<body>
+    <!-- Generates a table for the invoice displaying quantity, price, and extended price rows. Using examples from Invoice 4 and Lab 9 in class-->
+    <h1>Kaka'ako Surf Co. Order Invoice</h1>
+    <form name="cartform" action="/update_cart" method="POST"></form>
+    <img src="images/surfco.jpg" style="width: 100%; max-width: 300px" td class="title">
+    </td>
+    <!--Invoice table-->
+    <table>
+        <tbody>
+            <tr>
+                <th style="text-align: left;" width="43%">Product</th>
+                <th style="text-align: center;" width="10%">Quantity</th>
+                <th style="text-align: right;" width="10%">Price</th>
+            </tr>
+            <script>
+                subtotal = 0
+                for (let prodtype in cart_data) {
+                    products = allProducts[prodtype];
+                    quantities = cart_data[prodtype];
+                    for (i in quantities) {
+                        if (quantities[i] > 0) { //If quantities are greater than 0, execute the function and give subtotal
+                            extended_price = quantities[i] * products[i].price
+                            subtotal += extended_price;
+                            document.write(`
+            <tr>
+            <td style="text-align: left;" width="43%">${products[i].name}</td>
+            <td style="text-align: center;" width="10%">${quantities[i]}</td>
+            <td style="text-align: right;" width="10%">\$${extended_price.toFixed(2)}</td>
+            </tr>
+          `);
+                        }
+                    }
+                }
+                    // Computes tax
+                    var tax_rate = 0.05;
+                    var tax = tax_rate * subtotal;
+
+                    // Computes shipping
+                    shipping = 0.05 * subtotal; // 5% of subtotal
+
+                    // Compute grand total
+                    var total = subtotal + tax + shipping;
+            </script>
+
+            <tr>
+                <td colspan="4" width="100%">&nbsp;</td>
+            </tr>
+
+            <tr>
+                <td style="text-align: left;" colspan="3" width="67%">Sub-total</td>
+                <td width="54%">$
+                    <script>document.write(subtotal.toFixed(2));</script>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="text-align: left;" colspan="3" width="67%"><span>Tax</span></td>
+                <td width="54%">$
+                    <script>document.write(tax.toFixed(2));</script>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="text-align: left;" colspan="3" width="67%">Shipping</span></td>
+                <td width="54%">$
+                    <script>document.write(shipping.toFixed(2));</script>
+                    <div style="text-align: left;" class="col-50">
+                        A shipping fee of 5% of the subtotal will be applied to every order.
+                </td>
+            </tr>
+
+            <tr>
+                <td style="text-align: left;" colspan="3" width="67%"><strong>Total</strong>
+                </td>
+                <td width="54%"><strong>$
+                        <script>document.write(total.toFixed(2));</script>
+                    </strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+            document.write(`<h5>Modify your shopping cart by adding or removing items, then press "Update Cart"!</h5>
+      `)
+    </script>
+    <input type="button" value="Update Cart" name="Update" onclick="updatecart(cart_data)">
+    <br><br>
+    </form>
+    <!--Checkout Form Template from w3schools.com-->
+    <div class="col-75">
+        <div class="container">
+            <form name="complete_purchase" action="./complete_purchase.html" method="GET">
+                <!--Billing address form-->
+                <div class="row">
+                    <div class="col-50">
+                        <h3>Billing Address</h3>
+                        <!--Name-->
+                        <label for="fname"><i class="fa fa-user"></i>Full Name:</label>
+                        <input type="text" id="fname" name="firstname" placeholder="ITM352 Grader">
+                        <label for="email"><i class="fa fa-envelope"></i>Email:</label>
+                        <input type="text" id="email" name="email" placeholder="itm352@hawaii.edu">
+                        <!--Address-->
+                        <label for="adr"><i class="fa fa-address-card-o"></i>
+                            <br>Address:</label>
+                        <input type="text" id="adr" name="address" placeholder="2404 Maile Way">
+                        <label for="city"><i class="fa fa-institution"></i> City:</label>
+                        <input type="text" id="state" name="state" placeholder="Honolulu">
+                        <div class="row">
+                            <div class="col-50">
+                                <label for="state">State:</label>
+                                <input type="text" id="state" name="state" placeholder="HI">
+                                <div class="col-50">
+                                    <label for="zip">Zipcode:</label>
+                                    <input type="text" id="zip" name="zip" placeholder="96822">
+                                </div>
+                            </div>
+                        </div>
+                        <!--Creates a form for payment options with placeholders so customers can see example inputs-->
+                        <div class="col-50">
+                            <h3>Payment</h3>
+                            <label for="cname">Name on Card:</label>
+                            <input type="text" id="cname" name="cardname" placeholder="ITM352 Grader">
+                            <label for="ccnum">Card Number:</label>
+                            <input type="text" id="ccnum" name="cardnumber" placeholder="5555-5555-5555-5555">
+                            <br>
+                            <label for="expmonth">Exp. Date:</label>
+                            <input type="text" id="expmonth" name="expmonth" placeholder="MM/YY">
+                            <div class="col-50">
+                                <label for="cvv">CVV:</label>
+                                <input type="text" id="cvv" name="cvv" placeholder="123">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer>
+                    <!--Creates a purchase button-->
+                    <input type="Submit" name="submitPurchase" value="Submit Purchase">
+                </footer>
+</body>
+</html>

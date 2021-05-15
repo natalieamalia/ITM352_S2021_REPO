@@ -4,13 +4,13 @@
 <script>
     //functions from Lab 12 order_page.html and Assignment 1 examples
     function isNonNegInt(q, return_errors = false) { //Function that checks if values are postitive integers
-    errors = []; //Assumes no errors at first
-    if (q == "") { q = 0; } //Assumes blank inputs as quantity of 0 
-    if (Number(q) != q) errors.push('<font color="red">Not a number!</font>'); //Checks if string is a number
-    else if (q < 0) errors.push('<font color="red">Negative value!</font>'); //Checks if the string non-negative
-    else if (parseInt(q) != q) errors.push('<font color="red">Not a full value!</font>'); //Checks if string is an integer
-    return return_errors ? errors : (errors.length == 0); //Returns errors
-}
+        errors = []; //Assumes no errors at first
+        if (q == "") { q = 0; } //Assumes blank inputs as quantity of 0 
+        if (Number(q) != q) errors.push('<font color="red">Not a number!</font>'); //Checks if string is a number
+        else if (q < 0) errors.push('<font color="red">Negative value!</font>'); //Checks if the string non-negative
+        else if (parseInt(q) != q) errors.push('<font color="red">Not a full value!</font>'); //Checks if string is an integer
+        return return_errors ? errors : (errors.length == 0); //Returns errors
+    }
     function checkQuantityTextbox(qtyTextboxObj) {
         var errs = isNonNegInt(qtyTextboxObj.value, true); //Checks quantity textbox
         document.getElementById(qtyTextboxObj.name + '_message').innerHTML = errors.join(',');
@@ -63,9 +63,11 @@
             background-attachment: fixed;
             background-size: cover;
         }
+
         h2 {
             color: white;
         }
+
         h3 {
             color: white;
         }
@@ -76,7 +78,7 @@
         <li style="float:center"><a class="active" href="./products_display.html">Products</a></li>
         <li style="float:right"><a href="./invoice.html">Checkout</a></li>
         <li style="float:right"><a href="./login.html">Login</a></li>
-      </ul>
+    </ul>
     <!--Creates a product_display page with product name, image, price and quantity textbox-->
     <form name="product_form" action="/process_purchase" method="POST">
         <div>
@@ -98,11 +100,11 @@
                 </script>
             </main>
         </div>
-    <footer>
-        <!--Creates a purchase button-->
-        <input type = "Submit" name = "submitPurchase" value = "Submit Purchase">
-    </footer>
-</form>
+        <footer>
+            <!--Creates a purchase button-->
+            <input type="Submit" name="submitPurchase" value="Submit Purchase">
+        </footer>
+    </form>
 </body>
 
 </html>

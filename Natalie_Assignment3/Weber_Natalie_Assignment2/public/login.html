@@ -1,0 +1,76 @@
+<!--Natalie's Login Page created using examples from LAB 14 and "Getting Started with Assignment 2" Screencast-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        //Code borrowed and modified from Lab 13 and 14 
+        //Function informs user if error is present in login
+        //Params variable from from Lab12 modified for Assignment3 that GETs query string
+        let params = (new URL(document.location)).searchParams;
+        window.onload = function () {
+            if (params.has('errors')) {
+                username.value = params.get('username'); //Makes sticky
+                alert('Invalid Username or Password'); //Alerts error
+            }
+        }
+        function setCookie(cname, cvalue, exdays) { //Function copied and modified from Lab 15 "Cookies and Sessions" and w3schools.com example https://www.w3schools.com/js/js_cookies.asp
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000)); //Sets cookie expiration
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/"; //Puts expiration into the cookie
+        }
+        function deleteAllCookies() { //Function copied and modified from https://www.w3schools.com/js/js_cookies.asp
+            var cookies = document.cookie.split(";"); //Splits cookies
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            }
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="./products.js" type="text/javascript"> //Loads products.js in the reegistration page </script>
+    <script src="./functions.js" type="text/javascript"> //Loads functions.js in the reegistration page </script>
+    <script src="./user_data.json" type="json"></script>
+    <title>Login</title>
+    <link rel="stylesheet" href="./stylesheets/navbar.css">
+    <link rel="stylesheet" href="./stylesheets/loginregister.css">
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            background-image: url(./images/ocean.gif);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        ;
+    </style>
+    <script type="text/javascript">
+        //Loads in my navbar from navbar.js file
+        navbar();
+    </script>
+</head>
+
+<body>
+
+    <h1>Kaka'ako Surf Co. Member Login</h1>
+    <p>Please login <br>to complete your purchase!</p>
+    <form name="login" action="process_login" method="POST">
+        <div class="container"><br>
+            <input type="text" name="username" id="username" size="40" placeholder="Enter Username" required><br>
+            <input type="password" name="password" size="40" placeholder="Enter Password" onkeyup="" required><br>
+            <input type="submit" value="Login" name="login" class='btn'>
+        </div>
+    </form>
+    <!--Registration button for new members-->
+    <input type="button" name="newuser" value="New User? Register Here!" class="btn2"
+        onclick="window.location='./registration.html' + document.location.search;">
+</body>
+
+</html>

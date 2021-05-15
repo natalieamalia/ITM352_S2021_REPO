@@ -1,0 +1,51 @@
+<!--This HTML page indicates the purchase has been submitted and completed-->
+<script src="./products.js" type="text/javascript"> //Loads products.js in the reegistration page </script>
+<script src="./functions.js" type="text/javascript"> //Loads functions.js in the reegistration page </script>
+</script>
+<script src="./user_data.json" type="json"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Purchase</title>
+    <link rel="stylesheet" href="./stylesheets/navbar.css">
+    <script type="text/javascript">
+        navbar(); // This calls my navbar info from navbar.js
+    </script>
+    <br>
+    <p><h4>Please logout after your shopping session!</h4></p> 
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            background-image: url(./images/ocean.gif);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        h2 {
+            color: white;
+        }
+        h3 {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Kaka'ako Surf Co.</h1>
+    <script>
+        // This personalizes the user's invoice by identifying their name and thanking them for their purchase 
+        if (fullname != 'undefined' && fullname != '') {
+          document.write(`<h4> Mahalo <font color="black"><i>${fullname}</i></font> for your purchase!<h4>
+        `)
+        } else {
+          document.write(`<h4> Mahalo <font color="black"><i>${username}</i></font> for your purchase<h4>
+        `)
+        }
+      </script>
+    <h2><b>Kaka'ako Surf Co.</b><br>Since 2021</h2>
+</body>
+
+</body>
+</html> 
