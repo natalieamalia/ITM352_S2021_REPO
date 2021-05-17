@@ -1,5 +1,87 @@
 <!--Kaka'ako Surf Co. Product Display Page-->
 <!--Accesses allProducts from products.js-->
+<script>
+    //functions from Lab 12 order_page.html and Assignment 1 examples
+    function isNonNegInt(q, return_errors = false) { //Function that checks if values are postitive integers
+        var errors = []; //Assumes no errors at first
+        if (q == '') { q = 0; } //Assumes blank inputs as quantity of 0 
+        if (Number(q) != q) errors.push('<font color="red">Not a number!</font>'); //Checks if string is a number
+        else {
+            if (q < 0) errors.push('<font color="red">Negative value!</font>'); //Checks if the string non-negative
+            if (parseInt(q) != q) errors.push('<font color="red">Not a full value!</font>'); //Checks if string is an integer
+        }
+        return return_errors ? errors : (errors.length == 0); //Returns errors
+    }
+
+    function checkQuantityTextbox(qtyTextbox) {
+        var errs = isNonNegInt(qtyTextbox.value, true); //Checks quantity textbox
+        document.getElementById(qtyTextbox.name + '_message').innerHTML = errors.join(',');
+    }
+
+    function getCookie(cname) { //Function copied and modified from Lab 15 "Cookies and Sessions" and w3schools.com example https://www.w3schools.com/js/js_cookies.asp
+        var name = cname + "="; //Sets cookie name
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    //Saves products to shopping cart, sessionStorage and structure derived from https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
+    function saveProduct(i) {
+        var productQty = quantity_form[`quantity${i}`].value;
+        if (isNonNegInt(productQty) == true) {
+            sessionStorage[`${products}${i}`] = productQty; // Save product quantity to session
+            alert('Successfully added to cart!'); // Inform the user that they successfully added an item to the cart
+        }
+        else {
+            alert('Oops! We couldn’t add that to the cart!'); // Inform the user that there was an error
+        };
+        window.location.reload();
+    }
+
+    window.onload = function () {
+        let params = (new URL(document.location)).searchParams;
+        if (params.has('message')) {
+            alert(params.get("message"));
+        }
+        if (params.has('submitPurchase')) {
+            has_errors = false; //Assumes quanities are valid
+            total_qty = 0; //Checks that the quanitiy is greater than 0
+            for (i = 0; i < allProducts[products].length; i++) {
+                if (params.has(`quantity${i}`)) {
+                    a_qty = params.get(`quantity${i}`);
+                    //Makes textbox sticky
+                    quantity_form[`quantity${i}`].value = a_qty;
+                    total_qty += a_qty; //Puts data in textbox and makes textbox sticky
+                    if (!isNonNegInt(a_qty)) {
+                        has_errors = true; //If isNonNegInt has errors
+                        checkQuantityTextbox(quantity_form[`quantity${i}`]); //Specifies errors
+                    }
+                }
+            }
+        }
+    }
+    //Responds to errors or redirects to checkout if there are no erros
+    if (has_errors) { //Display if user selects invalid quantities
+            alert("Please enter valid quantities!");
+        } else if (total_qty == 0) { //Display if no quantities are selected
+            alert("Please select quantities!");
+        }
+        // If there are no errors and quantititys are OK, process invoice
+        else {
+            window.location = `./checkout.html${document.location.search}`;
+            window.stop;
+        }
+
+</script>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,88 +121,11 @@
     <script type="text/javascript">
         //This loads functions from functions.js
         navbar();
-
-        function getCookie(cname) { //Function copied and modified from Lab 15 "Cookies and Sessions" and w3schools.com example https://www.w3schools.com/js/js_cookies.asp
-            var name = cname + "="; //Sets cookie name
-            var decodedCookie = decodeURIComponent(document.cookie);
-            var ca = decodedCookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return "";
-        }
-
-        //Saves products to shopping cart, sessionStorage and structure derived from https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage
-        function saveProduct(i) {
-            var productQty = product_form[`quantity${i}`].value;
-            if (isNonNegInt(productQty) == true) {
-                sessionStorage[`${products}${i}`] = productQty; // Save product quantity to session
-                alert('Successfully added to cart!'); // Inform the user that they successfully added an item to the cart
-            }
-            else {
-                alert('Oops! We couldn’t add that to the cart!'); // Inform the user that there was an error
-            };
-            window.location.reload();
-        }
-
-        //functions from Lab 12 order_page.html and Assignment 1 examples
-        function isNonNegInt(q, return_errors = false) { //Function that checks if values are postitive integers
-            errors = []; //Assumes no errors at first
-            if (q == '') { q = 0; } //Assumes blank inputs as quantity of 0 
-            if (Number(q) != q) errors.push('<font color="red">Not a number!</font>'); //Checks if string is a number
-            else if (q < 0) errors.push('<font color="red">Negative value!</font>'); //Checks if the string non-negative
-            else if (parseInt(q) != q) errors.push('<font color="red">Not a full value!</font>'); //Checks if string is an integer
-            return return_errors ? errors : (errors.length == 0); //Returns errors
-        }
-
-        function checkQuantityTextbox(qtyTextboxObj) {
-            var errs = isNonNegInt(qtyTextboxObj.value, true); //Checks quantity textbox
-            document.getElementById(qtyTextboxObj.name + '_message').innerHTML = errors.join(',');
-        }
-
-        window.onload = function () {
-            if (params.has('message')) {
-                alert(params.get("message"));
-            }
-            if (params.has('submitPurchase')) {
-                errors = false; //Assumes quanities are valid
-                total_qty = 0; //Checks that the quanitiy is greater than 0
-                for (i = 0; i < products.length; i++) {
-                    if (params.has(`quantity${i}`)) {
-                        a_qty = params.get(`quantity${i}`);
-                        //Makes textbox sticky
-                        product_form[`quantity${i}`].value = a_qty;
-                        total_qty += a_qty; //Puts data in textbox and makes textbox sticky
-                        if (!isNonNegInt(a_qty)) {
-                            has_errors = true; //If isNonNegInt has errors
-                            checkQuantityTextbox(product_form[`quantity${i}`]); //Specifies errors
-                        }
-                    }
-                }
-            }
-        }
-        //Responds to errors or redirects to checkout if there are no erros
-        if (errors) { //Display if user selects invalid quantities
-            alert("Please enter valid quantities!");
-        } else if (total_qty == 0) { //Display if no quantities are selected
-            alert("Please select quantities!");
-        }
-        // If there are no errors and quantititys are OK, process invoice
-        else {
-            window.location = `./checkout.html${document.location.search}`;
-            window.stop;
-        }
     </script>
 
 <body>
     <!--Creates a product_display page with product name, image, price and quantity textbox-->
-    <form name="product_form" action="/process_form" method="POST">
+    <form name="quantity_form" action="/process_form" method="POST">
         <script>
             var user = getCookie('name');
             var username = getCookie('username');
@@ -166,7 +171,13 @@
     </form>
     <br>
     <footer>
-        <b><h2><a href="/logout" style="color: white;">Logout</a></b></h2>
+        <!--Creates a purchase button-->
+        <input type="Submit" name="submitPurchase" value="View Cart" >
+    </footer>
+    <footer>
+        <b>
+            <h2><a href="/logout" style="color: white;">Logout</a>
+        </b></h2>
         <h3>Kaka'ako Surf Co. &copy;2021</h3>
     </footer>
 </body>

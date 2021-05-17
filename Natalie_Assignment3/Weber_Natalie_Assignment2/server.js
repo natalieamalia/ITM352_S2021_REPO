@@ -10,23 +10,28 @@ var app = express(); //set express to variable 'app'
 var myParser = require("body-parser"); //loads and chaches body-parser module as variable "myParser"
 app.use(myParser.urlencoded({ extended: true })); //Parses data from body
 app.use(myParser.json()); //Parses json POSTS
+
 var session = require('express-session'); //Requires express-session module
 var cookieParser = require('cookie-parser'); //Requires cookie-parser
 app.use(cookieParser()); //Cookie-parser middleware
+const nodemailer = require("nodemailer"); //Requires nodemailer module
+
 //Processes all incoming requests and records them in the console
 app.all('*', function (req, res, next) { //for all request methods...
   console.log(req.method + ' to ' + req.path); //generates the request method and its path in the console
   next();
 });
+
 //app.use(cookieParser()); //CookieParser middleware
 var user_data = 'user_data.json'; //Sets user_data.json to variable "user_data"
 if (fs.existsSync(user_data)) {
-  var users_reg_data = JSON.parse(fs.readFileSync('./user_data.json', 'utf-8'));
+  stats = fs.statSync(user_data) //Loads in user_data file to user_data object
+  console.log(user_data + ' has ' + stats.size + ' characters!'); //Outputs size of user_data file
+  var users_reg_data = JSON.parse(fs.readFileSync('./user_data.json', 'utf-8')); //Parses user data
 }
 else {
   console.log(`${user_data} does not exist!`)
 }
-const nodemailer = require("nodemailer"); //Requires nodemailer module
 
 //Checks if quantities are valid using NonNegInt function from Assignment 1 modified using a product_key to post and save a session's quantities to Shopping Cart
 app.post("/process_form", function (request, response) { //Modified app.post process_purchase function from Assignment 2
@@ -63,25 +68,26 @@ app.post("/process_form", function (request, response) { //Modified app.post pro
 app.post("/process_login", function (req, res, next) {
   var LogError = [];
   console.log(req.query); //Requests query string
-  username = req.body.username.toLowerCase(); //Sets username to all lowercase
-  if (typeof users_reg_data[username] != 'undefined') { //If the username data does not equal undefined...
-    if (users_reg_data[username].password == req.body.password) {
-      req.query.username = username;
+  var user_username = req.body.username.toLowerCase(); //Sets username to all lowercase
+  if (typeof users_reg_data[user_username] != 'undefined') { //If the username data does not equal undefined...
+    if (users_reg_data[user_username].password == req.body.password) {
+      req.query.username = user_username;
       console.log(users_reg_data[req.query.username].name);
       req.query.name = users_reg_data[req.query.username].name
+      res.cookie('username', user_username);
       res.redirect('/checkout.html?' + qs.stringify(req.query));
       return; //Redirects to checkout if no errors are encountered
     } else { //Invalid password error
       LogError.push = ('Invalid password');
       console.log(LogError);
-      req.query.username = username;
-      req.query.name = users_reg_data[username].name;
+      req.query.username = user_username;
+      req.query.name = users_reg_data[user_username].name;
       req.query.LogError = LogError.join(';');
     }
   } else { //Invalid username error
     LogError.push = ('Invalid username');
     console.log(LogError);
-    req.query.username = username;
+    req.query.username = user_username;
     req.query.LogError = LogError.join(';');
   } //Redircts to login if there are username and password errors
   res.redirect('./login.html?' + qs.stringify(req.query));
@@ -112,6 +118,11 @@ app.post("/process_register", function (req, res) {
     errors.push('Use only letters and numbers')
   }
   //E-Mail Validation code borrowed and modified from Lab 14 examples
+  if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(req.body.email)) {
+  }
+  else {
+      errors.push('Please use a valid format email format (ex. johnsmith@gmail.com)')
+  }
   //Retains query string with order quantities if user registers as a new member
   if (req.body.password.length < 6) { //Requires password minimum of 6 characters
     errors.push('Password Minimum 6 Characters')
@@ -120,22 +131,22 @@ app.post("/process_register", function (req, res) {
     errors.push('Password Not a Match')
   }
   //User's registration is saved in user_data.json if there are no errors
-  req.query.name = req.body.name;
-  req.query.username = req.body.username;
-  req.query.email = req.body.email;
+
   if (errors.length == 0) {
     console.log('No errors')
     var username = req.body.username;
+    var fullname = req.body["name"]; 
     users_reg_data[username] = {}; //make it 'users'
-    users_reg_data[username].name = req.body.name;
+    users_reg_data[username].name = req.body.fullname;
     users_reg_data[username].password = req.body.password;
     users_reg_data[username].email = req.body.email;
 
     fs.writeFileSync(user_data, JSON.stringify(users_reg_data, null, 2));
-    res.cookie("username", username);
+    res.cookie("username", user_username);
     res.cookie("name", fullname);
-    res.cookie("email", req.body.email);
+    res.cookie("email", req.body.email); //Sets email for cookie
     res.redirect('./checkout.html'); //Redirects to checkout upon successful registration
+    res.redirect('./index.html');
   }
   //Borrowed and modified from Lab 14, logs errors in console and redirects to registration page
   else {
@@ -147,7 +158,7 @@ app.post("/process_register", function (req, res) {
 
 //Processing logout
 app.get("/logout", function (req, res) {
-  str = `<script>alert("${req.cookies['username']} is logged out"); location.href="./index.html";</script>`; //Sends logout string
+  str = `<script>alert('${req.cookies["username"]} is logged out."); location.href="./index.html";</script>`; //Sends logout string
   res.clearCookie('username'); //Clears cookies
   res.send(str);
   req.session.destroy(); //Terminates session
